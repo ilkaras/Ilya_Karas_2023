@@ -14,13 +14,11 @@ foreach (int i in numbers)
     {
         changed.Add(i);
         changed.Add(eleventh);
-        continue;
     }
     else
     {
         changed.Add(i);
     }
-        continue;
 }
 foreach (int i in changed)
 {
