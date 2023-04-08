@@ -1,4 +1,4 @@
-﻿namespace Les3pr1.Classes.Details;
+﻿namespace task1.Classes.Details;
 
 public class Drive : Detail
 {
@@ -17,7 +17,7 @@ public class Drive : Detail
         Lifetime = lifetime;
         Type = type;
     }
-    public string GetInfo()
+    public override string GetInfo()
     {
         return $"{Name}  {Type} {Interface}  {Speed}  Price: {Price}";
     }

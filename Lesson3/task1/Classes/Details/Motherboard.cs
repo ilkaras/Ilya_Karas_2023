@@ -1,4 +1,4 @@
-﻿namespace Les3pr1.Classes.Details;
+﻿namespace task1.Classes.Details;
 public class Motherboard : Detail
 {
     public string Socket { get;}
@@ -17,7 +17,7 @@ public class Motherboard : Detail
         Interfaces = interfaces;
     }
 
-    public string GetInfo()
+    public override string GetInfo()
     {
         return $"{Name}  {Socket}  {RamSlotsCount}-{RamSlotType}  Price: {Price}";
     }

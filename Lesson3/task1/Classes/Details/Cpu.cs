@@ -1,4 +1,4 @@
-﻿namespace Les3pr1.Classes.Details;
+﻿namespace task1.Classes.Details;
 
 public class Cpu : Detail
 {
@@ -14,7 +14,7 @@ public class Cpu : Detail
         Frequency = frequency;
     }
 
-    public string GetInfo()
+    public override string GetInfo()
     {
         return $"{Name}  {Socket}  {Cores}  {Frequency}  Price: {Price}";
     }

@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace Les3pr1.Classes.Details;
+namespace task1.Classes.Details;
 
 public class Gpu : Detail
 {
@@ -14,7 +14,7 @@ public class Gpu : Detail
         Speed = speed;
     }
 
-    public string GetInfo()
+    public override string GetInfo()
     {
         return $"{Name}  {Memory}  {Speed}  Price: {Price}";
     }

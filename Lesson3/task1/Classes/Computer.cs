@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using Les3pr1.Classes.Details;
-using Les3pr1;
+using task1.Classes.Details;
+using task1;
 
-namespace Les3pr1.Classes
+namespace task1.Classes
 {
     public class Computer
     {
@@ -14,39 +14,29 @@ namespace Les3pr1.Classes
 
         public string AddElement(string type, string label, DetailsStock stock)
         {
+            Detail? detail = FindDetail(type, label, stock);
+            if (detail == null) return "Detail not found or incompatible.";
+
             switch (type)
             {
                 case "motherboard":
-                    Motherboard? motherboard = stock.Motherboards.Find(m => m.Name == label);
-                    _motherboard = motherboard;
+                    _motherboard = (Motherboard)detail;
                     _rams.Clear();
                     _cpus.Clear();
                     _gpus.Clear();
                     _drives.Clear();
                     break;
-                case "Ram":
-                    if (_motherboard == null) break;
-                    Ram? ram = stock.Rams.Find(r =>
-                        r.Name == label && r.Type == _motherboard.RamSlotType &&
-                        _rams.Count < _motherboard.RamSlotsCount);
-                    _rams.Add(ram);
+                case "ram":
+                    _rams.Add((Ram)detail);
                     break;
-                case "Cpu":
-                    if (_motherboard == null) break;
-                    Cpu? cpu = stock.Cpus.Find(c => c.Name == label && c.Socket == _motherboard.Socket);
-                    _cpus.Add(cpu);
+                case "cpu":
+                    _cpus.Add((Cpu)detail);
                     break;
-                case "Gpu":
-                    if (_motherboard == null) break;
-                    Gpu? gpu = stock.Gpus.Find(g => g.Name == label);
-                    _gpus.Add(gpu);
+                case "gpu":
+                    _gpus.Add((Gpu)detail);
                     break;
-                case "Drive":
-                    if (_motherboard == null) break;
-                    Drive? drive = stock.Drives.Find(d =>
-                        d.Name == label && _motherboard.Interfaces.ContainsKey(d.Interface) &&
-                        _drives.Count(drv => drv.Interface == d.Interface) < _motherboard.Interfaces[d.Interface]);
-                    _drives.Add(drive);
+                case "drive":
+                    _drives.Add((Drive)detail);
                     break;
                 default:
                     return "This category does not exist!";
@@ -55,38 +45,15 @@ namespace Les3pr1.Classes
             return "";
         }
 
-
         public string? RemoveDetail(string detailType, string detailName)
         {
-            switch (detailType)
-            {
-                case "motherboard":
-                    _motherboard = null;
-                    _rams.Clear();
-                    _cpus.Clear();
-                    _gpus.Clear();
-                    _drives.Clear();
-                    break;
-                case "ram":
-                    Ram? ramToRemove = _rams.FirstOrDefault(ram => ram.Name.ToLower().Contains(detailName));
-                    if (ramToRemove != null) _rams.Remove(ramToRemove);
-                    break;
-                case "cpu":
-                    Cpu? cpuToRemove = _cpus.FirstOrDefault(cpu => cpu.Name.ToLower().Contains(detailName));
-                    if (cpuToRemove != null) _cpus.Remove(cpuToRemove);
-                    break;
-                case "gpu":
-                    Gpu? gpuToRemove = _gpus.FirstOrDefault(gpu => gpu.Name.ToLower().Contains(detailName));
-                    if (gpuToRemove != null) _gpus.Remove(gpuToRemove);
-                    break;
-                case "drive":
-                    Drive? driveToRemove = _drives.FirstOrDefault(drive => drive.Name.ToLower().Contains(detailName));
-                    if (driveToRemove != null) _drives.Remove(driveToRemove);
-                    break;
-                default:
-                    return "This category does not exist!";
-            }
-                        return null;
+            List<Detail?>? detailsList = GetDetailListByType(detailType);
+            if (detailsList == null) return "This category does not exist!";
+
+            Detail? detailToRemove = detailsList.FirstOrDefault(detail => detail.Name.ToLower().Contains(detailName));
+            if (detailToRemove != null) detailsList.Remove(detailToRemove);
+
+            return null;
         }
 
         public Dictionary<string, object?> GetDetails()
@@ -127,7 +94,7 @@ namespace Les3pr1.Classes
                 totalInfo += $"\n {detail.GetInfo()}";
                 totalPrice += detail.Price;
             }
-
+            
             totalInfo += "\nGpus: ";
             foreach (Gpu detail in _gpus)
             {
@@ -141,11 +108,45 @@ namespace Les3pr1.Classes
                 totalInfo += $"\n {detail.GetInfo()}";
                 totalPrice += detail.Price;
             }
+
             totalInfo += $"\nTotal price: {totalPrice}";
 
-            if (totalPrice > budget) return "The price is over budget!";
+            if (totalPrice <= budget)
+            {
+                return $"{totalInfo}\n\nYou have successfully built your PC within the budget!";
+            }
+            else
+            {
+                return $"{totalInfo}\n\nYou have exceeded your budget!";
+            }
+        }
 
-            return totalInfo;
+        private Detail? FindDetail(string type, string label, DetailsStock stock)
+        {
+            if (_motherboard == null && type != "motherboard") return null;
+
+            return type switch
+            {
+                "motherboard" => stock.Motherboards.Find(m => m.Name == label),
+                "ram" => stock.Rams.Find(r => r.Name == label && r.Type == _motherboard.RamSlotType && _rams.Count < _motherboard.RamSlotsCount),
+                "cpu" => stock.Cpus.Find(c => c.Name == label && c.Socket == _motherboard.Socket),
+                "gpu" => stock.Gpus.Find(g => g.Name == label),
+                "drive" => stock.Drives.Find(d => d.Name == label && _motherboard.Interfaces.ContainsKey(d.Interface) && _drives.Count(drive => drive.Interface == d.Interface) < _motherboard.Interfaces[d.Interface]),
+                _ => null,
+            };
+        }
+
+        private List<Detail?>? GetDetailListByType(string type)
+        {
+            return type switch
+            {
+                "motherboard" => new List<Detail?> { _motherboard },
+                "ram" => _rams.Cast<Detail?>().ToList(),
+                "cpu" => _cpus.Cast<Detail?>().ToList(),
+                "gpu" => _gpus.Cast<Detail?>().ToList(),
+                "drive" => _drives.Cast<Detail?>().ToList(),
+                _ => null,
+            };
         }
     }
 }

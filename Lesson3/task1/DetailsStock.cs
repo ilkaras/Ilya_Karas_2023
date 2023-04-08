@@ -1,7 +1,7 @@
-﻿using Les3pr1.Classes;
-using Les3pr1.Classes.Details;
+﻿using task1.Classes;
+using task1.Classes.Details;
 
-namespace Les3pr1
+namespace task1
 {
     public class DetailsStock
     {
