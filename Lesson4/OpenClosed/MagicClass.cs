@@ -1,27 +1,14 @@
-﻿using Value;
+﻿namespace Open_Closed;
 
-namespace Open_Closed
+public class MagicClass
 {
-    public class MagicClass
+    public void CountYourMagic(Magic? Power)
     {
-        public MagicValue CountYourMagic(int magic)
+        if (Power != null)
         {
-            if (magic == 150)
-            {
-                return new MagicValue
-                {
-                    AmmounPower = magic, Magic = "Fire Wizzzzzard!!!"
-                };
-            }
-
-            if (magic == 50000000)
-            {
-
-                return new MagicValue { AmmounPower = magic, Magic = "Fire Ice Wizzard!!!" };
-
-            }
-
-            return new MagicValue { AmmounPower=magic, Magic="And I didn`t know who are you! ahahah" };
-        }
+            Console.WriteLine($"Wow, you are a {Power.MagicName}");
+            return;
+        } 
+        Console.WriteLine("And I don`t know who are you! ahahah");
     }
 }
