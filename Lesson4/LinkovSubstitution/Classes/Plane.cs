@@ -3,16 +3,16 @@ using LiskovSubstitution.Vehicles;
 
 namespace LiskovSubstitution.Classes
 {
-    public class Driving : Vehicle, IDriveble
+    public class Plane : Vehicle, IFlyable
     {
         public override void StartEngine()
         {
-            Console.WriteLine("Wrum wrum");
+            Console.WriteLine("Wzzzzzzzz");
         }
 
-        public void Driveable()
+        public void Flyable()
         {
-            Console.WriteLine("It's driving?");
+            Console.WriteLine("It's flying?");
         }
     }
 }

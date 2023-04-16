@@ -3,7 +3,7 @@ using LiskovSubstitution.Interfaces;
 
 namespace LiskovSubstitution.Classes
 {
-    public class Riding : Vehicle, IRideble
+    public class Motorbike : Vehicle, IRideble
     {
         public override void StartEngine()
         {
