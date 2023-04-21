@@ -15,7 +15,9 @@ namespace Lesson5
                                   "3. Move file or directory\n" +
                                   "4. Copy file or directory\n" +
                                   "5. Get file or directory info\n" +
-                                  "6. Exit");
+                                  "6. Show current directory content\n" +
+                                  "7. Change directory\n" +
+                                  "8. Exit");
                 string input = Console.ReadLine();
                 switch (input)
                 {
@@ -35,6 +37,14 @@ namespace Lesson5
                         FileOperations.GetFileInfoOrDirInfoPrompt();
                         break;
                     case "6":
+                        FileSystemOperations.ShowCurrentDirectoryContent();
+                        break;
+                    case "7":
+                        Console.Write("Enter directory name or 'up' to go up: ");
+                        string newDir = Console.ReadLine();
+                        FileSystemOperations.ChangeDirectory(newDir);
+                        break;
+                    case "8":
                         exit = true;
                         break;
                     default:

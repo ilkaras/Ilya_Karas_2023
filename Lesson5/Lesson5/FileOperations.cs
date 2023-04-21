@@ -1,4 +1,7 @@
-﻿namespace Lesson5
+﻿using System;
+using System.IO;
+
+namespace Lesson5
 {
     public static class FileOperations
     {
@@ -137,6 +140,7 @@
             }
         }
 
+
         public static void GetFileInfoOrDirInfoPrompt()
         {
             Console.Write("To get dir info: dirname/\n" +
@@ -175,3 +179,5 @@
         }
     }
 }
+
+

@@ -5,24 +5,35 @@ namespace Lesson5
 {
     public static class DirectoryOperations
     {
+        public static void RemoveDir(string path)
+        {
+            path = Path.Combine(Directory.GetCurrentDirectory(), path.TrimEnd('/'));
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
+            else
+            {
+                Console.WriteLine("Directory does not exist");
+            }
+        }
+
         public static void MoveDirPrompt(string sourcePath)
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            MoveDir(sourcePath, destinationPath);
+            MoveDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
         public static void MoveDir(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
-            destinationPath = Path.Combine(Directory.GetCurrentDirectory(), destinationPath);
-
             if (Directory.Exists(sourcePath))
             {
                 if (!Directory.Exists(destinationPath))
                 {
                     Directory.Move(sourcePath, destinationPath);
-                    Console.WriteLine("Directory moved.");
+                    Console.WriteLine("Moved");
                 }
                 else
                 {
@@ -31,7 +42,7 @@ namespace Lesson5
             }
             else
             {
-                Console.WriteLine("Source directory does not exist.");
+                Console.WriteLine("Directory does not exist");
             }
         }
 
@@ -39,31 +50,18 @@ namespace Lesson5
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            CopyDir(sourcePath, destinationPath);
+            CopyDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
         public static void CopyDir(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
-            destinationPath = Path.Combine(Directory.GetCurrentDirectory(), destinationPath);
-
             if (Directory.Exists(sourcePath))
             {
                 if (!Directory.Exists(destinationPath))
                 {
-                    Directory.CreateDirectory(destinationPath);
-
-                    foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-                    {
-                        Directory.CreateDirectory(dirPath.Replace(sourcePath, destinationPath));
-                    }
-
-                    foreach (string filePath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
-                    {
-                        File.Copy(filePath, filePath.Replace(sourcePath, destinationPath), true);
-                    }
-
-                    Console.WriteLine("Directory copied.");
+                    CopyDirectory(new DirectoryInfo(sourcePath), new DirectoryInfo(destinationPath));
+                    Console.WriteLine("Copied");
                 }
                 else
                 {
@@ -72,7 +70,22 @@ namespace Lesson5
             }
             else
             {
-                Console.WriteLine("Source directory does not exist.");
+                Console.WriteLine("Directory does not exist");
+            }
+        }
+
+        private static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        {
+            Directory.CreateDirectory(destination.FullName);
+            foreach (FileInfo file in source.GetFiles())
+            {
+                file.CopyTo(Path.Combine(destination.FullName, file.Name), false);
+            }
+
+            foreach (DirectoryInfo subDir in source.GetDirectories())
+            {
+                DirectoryInfo nextTargetSubDir = destination.CreateSubdirectory(subDir.Name);
+                CopyDirectory(subDir, nextTargetSubDir);
             }
         }
 
@@ -81,31 +94,34 @@ namespace Lesson5
             path = Path.Combine(Directory.GetCurrentDirectory(), path.TrimEnd('/'));
             if (Directory.Exists(path))
             {
-                var info = new DirectoryInfo(path);
-                Console.WriteLine($"-----Directory Info-----\n" +
-                                  $"Name: {info.Name}\n" +
-                                  $"Parent: {info.Parent}\n" +
-                                  $"Creation time: {info.CreationTime}\n" +
-                                  $"Last write time: {info.LastWriteTime}\n" +
-                                  $"Attributes: {info.Attributes}\n");
+                GetDirInfo(path);
             }
             else
             {
-                Console.WriteLine("Directory does not exist.");
+                Console.WriteLine("Directory does not exist");
             }
         }
 
-        public static void RemoveDir(string path)
+        public static void GetDirInfo(string path)
         {
-            path = Path.Combine(Directory.GetCurrentDirectory(), path.TrimEnd('/'));
-            if (Directory.Exists(path))
+            var info = new DirectoryInfo(path);
+            Console.WriteLine($"-----Directory Info-----\n" +
+                              $"Name: {info.Name}\n" +
+                              $"Parent: {info.Parent}\n" +
+                              $"Creation time: {info.CreationTime}\n" +
+                              $"Last write time: {info.LastWriteTime}\n" +
+                              $"Root: {info.Root}\n");
+
+            Console.WriteLine("Subdirectories:");
+            foreach (var dir in info.GetDirectories())
             {
-                Directory.Delete(path, true);
-                Console.WriteLine("Directory removed.");
+                Console.WriteLine($"- {dir.Name}");
             }
-            else
+
+            Console.WriteLine("Files:");
+            foreach (var file in info.GetFiles())
             {
-                Console.WriteLine("Directory does not exist.");
+                Console.WriteLine($"- {file.Name}");
             }
         }
     }
