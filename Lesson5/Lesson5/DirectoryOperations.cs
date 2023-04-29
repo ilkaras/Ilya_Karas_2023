@@ -25,14 +25,14 @@ namespace Lesson5
             MoveDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
-        public static void MoveDir(string sourcePath, string destinationPath)
+        public static async Task MoveDir(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
             if (Directory.Exists(sourcePath))
             {
                 if (!Directory.Exists(destinationPath))
                 {
-                    Directory.Move(sourcePath, destinationPath);
+                    await Task.Run(() => Directory.Move(sourcePath, destinationPath));
                     Console.WriteLine("Moved");
                 }
                 else
@@ -53,14 +53,14 @@ namespace Lesson5
             CopyDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
-        public static void CopyDir(string sourcePath, string destinationPath)
+        public static async Task CopyDir(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
             if (Directory.Exists(sourcePath))
             {
                 if (!Directory.Exists(destinationPath))
                 {
-                    CopyDirectory(new DirectoryInfo(sourcePath), new DirectoryInfo(destinationPath));
+                    await Task.Run(() => CopyDirectory(new DirectoryInfo(sourcePath), new DirectoryInfo(destinationPath)));
                     Console.WriteLine("Copied");
                 }
                 else
@@ -74,18 +74,18 @@ namespace Lesson5
             }
         }
 
-        private static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        private static async Task CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
         {
             Directory.CreateDirectory(destination.FullName);
             foreach (FileInfo file in source.GetFiles())
             {
-                file.CopyTo(Path.Combine(destination.FullName, file.Name), false);
+                await Task.Run(() =>file.CopyTo(Path.Combine(destination.FullName, file.Name), false));
             }
 
             foreach (DirectoryInfo subDir in source.GetDirectories())
             {
                 DirectoryInfo nextTargetSubDir = destination.CreateSubdirectory(subDir.Name);
-                CopyDirectory(subDir, nextTargetSubDir);
+                await Task.Run(() => CopyDirectory(subDir, nextTargetSubDir));
             }
         }
 

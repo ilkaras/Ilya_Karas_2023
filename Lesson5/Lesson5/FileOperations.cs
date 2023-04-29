@@ -12,12 +12,12 @@ namespace Lesson5
             Console.WriteLine(ReadFile(filePath));
         }
 
-        public static string ReadFile(string path)
+        public static async Task<string> ReadFile(string path)
         {
             path = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (File.Exists(path))
             {
-                return File.ReadAllText(path);
+                return await File.ReadAllTextAsync(path);
             }
             else
             {
@@ -42,12 +42,12 @@ namespace Lesson5
             }
         }
 
-        public static void RemoveFile(string path)
+        public static async Task RemoveFile(string path)
         {
             path = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (File.Exists(path))
             {
-                File.Delete(path);
+                await Task.Run(() => File.Delete(path));
             }
             else
             {
@@ -80,14 +80,14 @@ namespace Lesson5
             MoveFile(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         }
 
-        public static void MoveFile(string sourcePath, string destinationPath)
+        public static async Task MoveFile(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath);
             if (File.Exists(sourcePath))
             {
                 if (!File.Exists(destinationPath))
                 {
-                    File.Move(sourcePath, destinationPath);
+                    await Task.Run(() => File.Move(sourcePath, destinationPath));
                     Console.WriteLine("Moved");
                 }
                 else
@@ -127,12 +127,12 @@ namespace Lesson5
             CopyFile(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         }
 
-        public static void CopyFile(string sourcePath, string destinationPath)
+        public static async Task CopyFile(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath);
             if (File.Exists(sourcePath))
             {
-                File.Copy(sourcePath, destinationPath);
+                await Task.Run(() => File.Copy(sourcePath, destinationPath));
             }
             else
             {
