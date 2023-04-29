@@ -9,10 +9,10 @@ namespace Lesson5
         {
             Console.Write("File name for read: ");
             string filePath = Console.ReadLine();
-            Console.WriteLine(ReadFile(filePath));
+            Console.WriteLine(ReadFileAsync(filePath));
         }
 
-        public static async Task<string> ReadFile(string path)
+        public static async Task<string> ReadFileAsync(string path)
         {
             path = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (File.Exists(path))
@@ -38,11 +38,11 @@ namespace Lesson5
             }
             else
             {
-                RemoveFile(path);
+                RemoveFileAsync(path);
             }
         }
 
-        public static async Task RemoveFile(string path)
+        public static async Task RemoveFileAsync(string path)
         {
             path = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (File.Exists(path))
@@ -77,10 +77,10 @@ namespace Lesson5
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            MoveFile(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
+            MoveFileAsync(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         }
 
-        public static async Task MoveFile(string sourcePath, string destinationPath)
+        public static async Task MoveFileAsync(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath);
             if (File.Exists(sourcePath))
@@ -124,10 +124,10 @@ namespace Lesson5
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            CopyFile(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
+            CopyFileAsync(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath)));
         }
 
-        public static async Task CopyFile(string sourcePath, string destinationPath)
+        public static async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath);
             if (File.Exists(sourcePath))

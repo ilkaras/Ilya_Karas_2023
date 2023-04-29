@@ -22,10 +22,10 @@ namespace Lesson5
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            MoveDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
+            MoveDirAsync(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
-        public static async Task MoveDir(string sourcePath, string destinationPath)
+        public static async Task MoveDirAsync(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
             if (Directory.Exists(sourcePath))
@@ -50,17 +50,17 @@ namespace Lesson5
         {
             Console.Write("Destination directory: ");
             string destinationPath = Console.ReadLine();
-            CopyDir(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
+            CopyDirAsync(sourcePath, Path.Combine(destinationPath, Path.GetFileName(sourcePath.TrimEnd('/'))));
         }
 
-        public static async Task CopyDir(string sourcePath, string destinationPath)
+        public static async Task CopyDirAsync(string sourcePath, string destinationPath)
         {
             sourcePath = Path.Combine(Directory.GetCurrentDirectory(), sourcePath.TrimEnd('/'));
             if (Directory.Exists(sourcePath))
             {
                 if (!Directory.Exists(destinationPath))
                 {
-                    await Task.Run(() => CopyDirectory(new DirectoryInfo(sourcePath), new DirectoryInfo(destinationPath)));
+                    await Task.Run(() => CopyDirectoryAsync(new DirectoryInfo(sourcePath), new DirectoryInfo(destinationPath)));
                     Console.WriteLine("Copied");
                 }
                 else
@@ -74,7 +74,7 @@ namespace Lesson5
             }
         }
 
-        private static async Task CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        private static async Task CopyDirectoryAsync(DirectoryInfo source, DirectoryInfo destination)
         {
             Directory.CreateDirectory(destination.FullName);
             foreach (FileInfo file in source.GetFiles())
@@ -85,7 +85,7 @@ namespace Lesson5
             foreach (DirectoryInfo subDir in source.GetDirectories())
             {
                 DirectoryInfo nextTargetSubDir = destination.CreateSubdirectory(subDir.Name);
-                await Task.Run(() => CopyDirectory(subDir, nextTargetSubDir));
+                await Task.Run(() => CopyDirectoryAsync(subDir, nextTargetSubDir));
             }
         }
 
