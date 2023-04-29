@@ -14,30 +14,7 @@ namespace Delegates_events_lambda
             Console.WriteLine("Enter second number");
             float secondNum = float.Parse(Console.ReadLine());
             calculator.Notify += DisplayMessage;
-            float result;
-
-            switch (action)
-            {
-                case "+":
-                    result = calculator.Calculate(firstNum, secondNum, calculator.Plus);
-                    break;
-
-                case "-":
-                    result = calculator.Calculate(firstNum, secondNum, calculator.Minus);
-                    break;
-
-                case "*":
-                    result = calculator.Calculate(firstNum, secondNum, calculator.Multiply);
-                    break;
-
-                case "/":
-                    result = calculator.Calculate(firstNum, secondNum, calculator.Divide);
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid action.");
-                    return;
-            }
+            float result = calculator.Actions(action, firstNum, secondNum);
 
             calculator.OnNotify($"Result: {result}");
         }
